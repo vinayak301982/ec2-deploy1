@@ -1,0 +1,31 @@
+---
+- name: Provision an EC2 instance
+  hosts: localhost
+  gather_facts: False
+  vars:
+    ami_id: "ami-016eb5d644c333ccb"
+    instance_type: "t2.micro"
+    key_name: "EC2key"
+    region: "us-east-1"
+    security_group: "sg-04277df0c0f20df6f"
+    subnet_id: "subnet-058bcee7163608433"
+  tasks:
+    - name: Create a new EC2 instance
+      ec2:
+        instance_type: "{{ t2.micro }}"
+        image: "{{ ami-016eb5d644c333ccb }}"
+        region: "{{ us-east-1}}"
+        key_name: "{{ EC2key }}"
+        count: 1
+        group_id: "{{ sg-04277df0c0f20df6f }}"
+        vpc_subnet_id: "{{ subnet-058bcee7163608433 }}"
+        wait: yes
+        assign_public_ip: yes
+        instance_tags:
+          Name: "Jenkins EC2 instance"
+      register: ec2
+
+    - name: Add the new instance to the host group
+      add_host:
+        hostname: "{{ ec2.instances[0].public_ip }}"
+        groupname: "ec2_hosts"
