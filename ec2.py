@@ -118,7 +118,7 @@ be used instead.
 'my_instance': {
     'region': 'us-east-1',             # attribute
     'availability_zone': 'us-east-1a', # attribute
-    'private_dns_name': '172.31.0.1',  # attribute
+    'private_dns_name': 'private_dns_name',  # attribute
     'ec2_tag_deployment': 'blue',      # tag
     'ec2_tag_clusterid': 'ansible',    # tag
     'ec2_tag_Name': 'webserver',       # tag
