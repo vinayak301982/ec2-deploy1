@@ -1,14 +1,14 @@
 ---
 - name: Provision an EC2 instance
   hosts: localhost
-  gather_facts: False
+  gather_facts: false
   vars:
-    ami_id: "ami-016eb5d644c333ccb"
-    instance_type: "t2.micro"
-    key_name: "EC2key"
-    region: "us-east-1"
-    security_group: "sg-04277df0c0f20df6f"
-    subnet_id: "subnet-058bcee7163608433"
+    ami_id: ami-016eb5d644c333ccb
+    instance_type: t2.micro
+    key_name: EC2key
+    region: us-east-1
+    security_group: sg-04277df0c0f20df6f
+    subnet_id: subnet-058bcee7163608433
   tasks:
     - name: Create a new EC2 instance
       ec2:
@@ -22,10 +22,9 @@
         wait: yes
         assign_public_ip: yes
         instance_tags:
-          Name: "Jenkins EC2 instance"
+          Name: Jenkins EC2 instance
       register: ec2
-
     - name: Add the new instance to the host group
       add_host:
         hostname: "{{ ec2.instances[0].public_ip }}"
-        groupname: "ec2_hosts"
+        groupname: ec2_hosts
