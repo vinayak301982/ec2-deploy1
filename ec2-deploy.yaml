@@ -1,30 +1,36 @@
 ---
-- name: Provision an EC2 instance
+- name: Launch EC2 instance
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   vars:
-    ami_id: ami-016eb5d644c333ccb
-    instance_type: t2.micro
-    key_name: EC2key
+    name: "public-compute-instance"
     region: us-east-1
-    security_group: sg-04277df0c0f20df6f
-    subnet_id: subnet-058bcee7163608433
+    access_key: access_key
+    secret_key: secret_key
+    key_name: "prod-ssh-key"
+    vpc_subnet_id: subnet-5ca1ab1e
+    instance_type: c5.large
+    security_group: default
+    network:
+      assign_public_ip: true
+    image_id: ami-123456
+    tags:
+      Environment: Testing
   tasks:
-    - name: Create a new EC2 instance
-      ec2:
-        instance_type: "{{ amazon.aws.ec2_instance }}"
-        image: "{{ ami-016eb5d644c333ccb }}"
-        region: "{{ us-east-1}}"
-        key_name: "{{ EC2key }}"
-        count: 1
-        group_id: "{{ sg-04277df0c0f20df6f }}"
-        vpc_subnet_id: "{{ subnet-058bcee7163608433 }}"
-        wait: yes
-        assign_public_ip: yes
-        instance_tags:
-          Name: Jenkins EC2 instance
+    - name: Create EC2 instance
+      amazon.aws.ec2_instance:
+        name: Myinstance
+        access_key: AKIA6HDJY6E7ZEGENQX6
+        secret_key: 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
+        region: us-east-1
+        key_name: EC2key
+        vpc_subnet_id: subnet-03c360d07fef2f943
+        instance_type: t2.micro
+        security_group: sg-0209f1d0fdf2cfb4b
+        network:
+          assign_public_ip: true
+        image_id: ami-00c39f71452c08778
+        tags:
+          Environment: Testing
+
       register: ec2
-    - name: Add the new instance to the host group
-      add_host:
-        hostname: "{{ ec2.instances[0].public_ip }}"
-        groupname: ec2_hosts
